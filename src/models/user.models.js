@@ -50,7 +50,7 @@ userSchema.pre("save", async function (next) {
   //modify nhi hoga to return
   if (!this.isModified(password)) return next();
   //password,salts ya no.of rounds
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
