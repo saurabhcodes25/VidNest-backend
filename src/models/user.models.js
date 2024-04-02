@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema(
       type: String, //cloudinary
     },
 
-    watchHistory: [{ type: Schema.Types.ObjectId, ref: "Video" }],
+    watchHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Video" }],
     password: {
       type: String,
       required: [true, "password is required"],

@@ -1,12 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import ApiError from "../utils/ApiError";
-import { User } from "../models/User";
-import { uploadOnCloudinary } from "../utils/cloudinary";
-import { ApiResponse } from "../utils/apiResponse";
-
-
-
-
+import { asyncHandler } from "../utils/asyncHandler.js";
+import ApiError from "../utils/apiErrors.js";
+import { User } from "../models/user.models.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   //get user details from frontend
@@ -30,8 +26,11 @@ const registerUser = asyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All fields are required");
   }
-  const ExistingUser = User.findOne({ $or: [{ email }, { username }] });
+  const ExistingUser = await User.findOne({ $or: [{ email }, { username }] });
+
   if (ExistingUser) throw new ApiError(409, "User already exists");
+  console.log(req.files);
+
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const coverImageLocalPath = req.files?.coverImage[0]?.path;
   if (!avatarLocalPath) throw new ApiError(400, "Please upload avatar");
@@ -53,15 +52,15 @@ const registerUser = asyncHandler(async (req, res) => {
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken",
   );
-  if(!createdUser)throw new ApiError(500,"User not created properly");
+  if (!createdUser) throw new ApiError(500, "User not created properly");
 
-    return res.status(201).json(new ApiResponse(200,createdUser,"User created successfully"));
+  return res
+    .status(201)
+    .json(new ApiResponse(200, createdUser, "User created successfully"));
 });
-
-
 
 const loginUser = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "User logged in successfully" });
 });
 
-export { registerUser, loginUse
+export { registerUser, loginUser };
