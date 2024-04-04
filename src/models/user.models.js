@@ -59,6 +59,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
+//short lived:expire ho jaata hai after some time
 //access token aur fir payload info uske andar
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
@@ -74,6 +75,8 @@ userSchema.methods.generateAccessToken = function () {
     },
   );
 };
+
+//long lived:baar baar login nhi karna padega
 //refresh token aur fir payload info uske andar
 
 userSchema.methods.generateRefreshToken = function () {
